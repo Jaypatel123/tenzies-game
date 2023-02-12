@@ -1,32 +1,29 @@
 import React, { useState } from "react";
-import Die from "./Components/Die"
+import Die from "./Components/Die";
 
 import "./App.css";
 function App() {
   const [diceNumber, isDiceNumber] = useState(allNewDice());
-  function allNewDice(){
-      let newDice = []
-      for(let i=0; i<10; i++){
-        newDice.push(Math.ceil(Math.random() * 6))
-      }
-      return newDice
-  };
-
-  function diceRolled(){
-    
+  function allNewDice() {
+    const newDice = [];
+    for (let i = 0; i < 10; i++) {
+      newDice.push({
+        value: Math.ceil(Math.random() * 6),
+        isHeld: false,
+      })
+    }
+    return newDice;
   }
 
-  // const allNewDice = () => {
-  //   console.log(Math.floor(Math.random()* 6) + 1)
-  // }
+  function diceRolled(){
+    isDiceNumber(allNewDice)
+  }
 
-  const diceElements = diceNumber.map(die=><Die value={die}/>)
+  const diceElements = diceNumber.map(die=><Die value={die.value}/>)
   return (
     <div className="App">
       <main>
-        <div className="dice-container">
-          {diceElements} 
-        </div>
+        <div className="dice-container">{diceElements} </div>
         <button className="dice-rolled" onClick={diceRolled}> Roll</button>
       </main>
     </div>
