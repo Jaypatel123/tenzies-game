@@ -1,10 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Die from "./Components/Die";
 import { nanoid } from "nanoid";
 
 import "./App.css";
 function App() {
   const [diceNumber, isDiceNumber] = useState(allNewDice());
+  const [tenz, isTenz] = useState(false);
+
+  useEffect(()=>{
+  const allHeld = diceNumber.every(die => die.isHeld);
+  const firstNumber = diceNumber[0].value
+  const allSameVal = diceNumber.every(die => die.value === firstNumber)
+
+  if (allHeld && allSameVal){
+    isTenz(true)
+    console.log("You Won!!")
+  }
+
+  }, [diceNumber])
 
   function generateNewDice(){
     return {
@@ -56,9 +69,11 @@ function App() {
   return (
     <div className="App">
       <main>
+      <h1> Tenzies</h1>
+      <p> Roll untill all dice are the same. click each die to freeze it at its current value between rools</p>
         <div className="dice-container">{diceElements} </div>
         <button className="dice-rolled" onClick={diceRolled}>
-          Roll
+          {tenz ? "New Game" : "Roll"}
         </button>
       </main>
     </div>
