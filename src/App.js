@@ -7,24 +7,23 @@ function App() {
   const [diceNumber, isDiceNumber] = useState(allNewDice());
   const [tenz, isTenz] = useState(false);
 
-  useEffect(()=>{
-  const allHeld = diceNumber.every(die => die.isHeld);
-  const firstNumber = diceNumber[0].value
-  const allSameVal = diceNumber.every(die => die.value === firstNumber)
+  useEffect(() => {
+    const allHeld = diceNumber.every((die) => die.isHeld);
+    const firstNumber = diceNumber[0].value;
+    const allSameVal = diceNumber.every((die) => die.value === firstNumber);
 
-  if (allHeld && allSameVal){
-    isTenz(true)
-    console.log("You Won!!")
-  }
+    if (allHeld && allSameVal) {
+      isTenz(true);
+      console.log("You Won!!");
+    }
+  }, [diceNumber]);
 
-  }, [diceNumber])
-
-  function generateNewDice(){
+  function generateNewDice() {
     return {
       id: nanoid(),
       value: Math.ceil(Math.random() * 6),
-      isHeld: false
-    }
+      isHeld: false,
+    };
   }
 
   function allNewDice() {
@@ -36,17 +35,22 @@ function App() {
   }
 
   function diceRolled() {
-
-    isDiceNumber(preNum => preNum.map(die=> die.isHeld ? die : generateNewDice()));
+    if (!tenz) {
+      isDiceNumber((preNum) =>
+        preNum.map((die) => (die.isHeld ? die : generateNewDice()))
+      );
+    } else {
+      isTenz(false)
+      isDiceNumber(allNewDice)
+    }
   }
 
   function holdDice(id) {
-    isDiceNumber(preNum => {
-      return preNum.map(die => { 
-        return die.id === id ? 
-        {...die, isHeld: !die.isHeld} : 
-        die})
-    })
+    isDiceNumber((preNum) => {
+      return preNum.map((die) => {
+        return die.id === id ? { ...die, isHeld: !die.isHeld } : die;
+      });
+    });
 
     // diceNumber.map((die) =>
     //   die.id === id
@@ -69,8 +73,12 @@ function App() {
   return (
     <div className="App">
       <main>
-      <h1> Tenzies</h1>
-      <p> Roll untill all dice are the same. click each die to freeze it at its current value between rools</p>
+        <h1> Tenzies</h1>
+        <p>
+          {" "}
+          Roll untill all dice are the same. click each die to freeze it at its
+          current value between rools
+        </p>
         <div className="dice-container">{diceElements} </div>
         <button className="dice-rolled" onClick={diceRolled}>
           {tenz ? "New Game" : "Roll"}
